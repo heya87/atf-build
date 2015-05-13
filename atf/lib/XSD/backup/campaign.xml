@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<XmlTestCampaign name="create stream">
+    <device>
+        <name>A_Top</name>
+        <ip>192.168.1.106</ip>
+        <port>9009</port>
+    </device>
+    <device>
+        <name>A_Bottom</name>
+        <ip>192.168.1.105</ip>
+        <port>9009</port>
+    </device>
+        
+    <variable>sourceId</variable>
+    <variable>map</variable>
+
+    <testcase name="createSource">
+        <device>A_Top</device>
+
+        <node>device/streaming/sessions/sources</node>            <!-- Change to node "sources" of device 1-->
+
+        <action>                         <!-- Create new source  save return value in var "sourceId"-->
+            <type> emberfunction </type>
+            <name> create </name>
+            <value> </value>
+            <assignTo> $sourceId </assignTo>
+        </action>
+
+        <result>
+        	<node>device/streaming/sessions/sources</node>
+            <assert>
+                <type>NotNull</type>
+                <actual>
+                	<value>$sourceId</value>
+            	</actual>
+                <expected></expected>
+            </assert>
+        </result>
+
+
+    </testcase>
+
+    <testcase name="mapSenderToInput">
+        <device>A_Top</device>
+        <dependency>createSource</dependency>
+
+        <node>device/streaming/streams/senders/$sourceId</node>            <!-- Change to node "senders>senderId" -->
+
+        <action>             <!-- connect sender with Audio-ra0/0 -->
+            <type> setAttribute </type>
+            <name> $map </name>
+            <value> RAVENNA Audio-ra0/0</value>
+            <assignTo> </assignTo>
+        </action>
+
+
+        <result>                        <!-- check if sender state is 1-->
+            <node>device/streaming/streams/senders/$sourceId</node>
+            <assert>
+                <type>Equals</type>
+                <actual>
+                    <action>
+                        <type> getAttribute </type>
+                        <name> state </name>
+                    </action>
+                </actual>
+                <expected>1</expected>
+            </assert>
+        </result>
+    </testcase>
+
+</XmlTestCampaign>
+
+
+	

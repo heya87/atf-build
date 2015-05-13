@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <xs:element name="XmlTestCampaign">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="device" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="name" type="xs:string"></xs:element>
+                                             <xs:element name="ip" type="xs:string"></xs:element>
+                                             <xs:element name="port" type="xs:int"></xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                           <xs:element name="variable" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                           <xs:element name="testcase" maxOccurs="unbounded">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="device" type="xs:string" minOccurs="1" maxOccurs="1"></xs:element>
+                                             <xs:element name="dependency" type="xs:string" minOccurs="0" maxOccurs="unbounded"></xs:element>
+                                             <xs:element name="node" type="xs:string" minOccurs="1" maxOccurs="1"></xs:element>
+                                             <xs:element name="action">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="type" type="xs:string"></xs:element>
+                                                               <xs:element name="name" type="xs:string"></xs:element>
+                                                               <xs:element name="value" type="xs:string"></xs:element>
+                                                               <xs:element name="assignTo" type="xs:string"></xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="result">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                         	   <xs:element name="node" type="xs:string" minOccurs="1" maxOccurs="1"></xs:element>
+                                                               <xs:element name="assert">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="type" type="xs:string"></xs:element>
+                                                                                 <xs:element name="actual">
+                                                                                       <xs:complexType>
+                                                                                         <xs:choice minOccurs="1" maxOccurs="1">
+                                                                                             <xs:element name="action">
+                                                                                                   <xs:complexType>
+                                                                                                         <xs:sequence>
+                                                                                                               <xs:element name="type" type="xs:string"></xs:element>
+                                                                                                               <xs:element name="name" type="xs:string"></xs:element>
+                                                               													<xs:element name="value" type="xs:string"></xs:element>
+                                                                                                               <xs:element name="assignTo" type="xs:string" nillable="true"></xs:element>
+                                                                                                         </xs:sequence>
+                                                                                                   </xs:complexType>
+                                                                                             </xs:element>
+                                                                                             <xs:element name="value" type="xs:string"></xs:element>
+                                                                                         </xs:choice>
+                                                                                       </xs:complexType>
+                                                                                 </xs:element>
+                                                                                 <xs:element name="expected" type="xs:string"></xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                       </xs:sequence>
+                                       <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+                     <xs:attribute type="xs:string" name="name"/>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>

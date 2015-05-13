@@ -1,0 +1,6 @@
+Name: atf-testservice
+Description: atf-testservice
+Version: 0.1
+
+Requires: 
+Libs: -r:./atf-testservice.dll
