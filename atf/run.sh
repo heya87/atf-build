@@ -1,2 +1,2 @@
   pwd
-  exec mono /atf/lib/atf-consoleinterface.exe scripts/
+  exec mono lib/atf-consoleinterface.exe scripts/
