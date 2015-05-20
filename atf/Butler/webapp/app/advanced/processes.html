@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h1 class="modal-title">Processes</h1>
+</div>
+<div class="modal-body" ng-controller="rv.controllers.advanced">
+    <pre style="max-height: 400px; overflow: scroll; word-wrap: normal;">
+        {{processes}}
+    </pre>
+    <button class="btn btn-default" ng-click="refresh();"><i class="fa fa-refresh"></i> Refresh</button>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="$close()">Close</button>
+</div>

@@ -1,0 +1,5 @@
+﻿2015/05/13 15:12:27.723 Th1211990 NOTICE   ravenna.bondd bondd.cpp:75 bondd 1.3-8765D (unknown)
+2015/05/13 15:12:27.737 Th1211990 INFO     ravenna.matrix_handler matrix_handler.cpp:67 Detected dummy routing matrix.
+2015/05/13 15:12:49.660 io-1e68 WARN     ravenna.conf.ember service_proxy_handler.cpp:256 Unexpected command type while enumerating message
+2015/05/13 15:12:50.723 io-7e8 WARN     ravenna.conf.ember service_proxy_handler.cpp:256 Unexpected command type while enumerating message
+2015/05/13 15:13:14.588 io-1e68 WARN     ravenna.conf.ember service_proxy_handler.cpp:256 Unexpected command type while enumerating message

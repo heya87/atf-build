@@ -1,0 +1,146 @@
+<div class="container voffset5">
+    <div ng-include="'app/identity/identity.html'"></div>
+</div>
+
+<div class="voffset5">
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div ng-include="'app/network/network.html'"></div>
+            </div>
+            <div class="col-sm-4">
+                <div ng-include="'app/sync/sync.html'"></div>
+            </div>
+            <div class="col-sm-4">
+                <div ng-include="'app/medias/medias.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container voffset3" ng-controller="rv.controllers.sources">
+    <hr />
+    <div class="col-sm-6">
+        <div class="row">
+            <h1><i class="fa fa-upload fa-rotate-90"></i> Sources</h1>
+        </div>
+        <div class="row" ng-if="expertMode[0]">
+            <ul class="list list-inline" style="margin-bottom: 0px;">
+                <li>
+                    <button class="btn btn-default btn-xs" title="Select all" ng-click="selectAll()" ng-if="selected.length == 0" ng-disabled="sources.length == 0"><i class="fa fa-fw fa-square-o"></i></button>
+                    <button class="btn btn-default btn-xs" title="Select none" ng-click="selectNone()"  ng-if="selected.length > 0  &&  selected.length < sources.length"><i class="fa fa-fw fa-minus-square-o"></i></button>
+                    <button class="btn btn-default btn-xs" title="Select none" ng-click="selectNone()"  ng-if="selected.length > 0  &&  selected.length == sources.length"><i class="fa fa-fw fa-check-square-o"></i></button>
+                </li>        
+                <li><button class="btn btn-default btn-xs" title="Create a new source" ng-click="addSource()"><i class="fa fa-plus"></i> Create</button></li>
+                <li>
+                    <button class="btn btn-warning btn-xs" title="Delete selected source(s)" ng-disabled="selected.length == 0" ng-click="deleteSelected()"><i class="fa fa-trash"></i> Delete</button>
+                </li>
+            </ul>
+        </div>
+        <div class="row voffset2" style="padding-right: 20px;">
+            <ul class="list-unstyled" infinite-scroll="addItems()" infinite-scroll-distance="2">
+                <li class="show-hover" style="border-top: 1px solid #eee; padding: 0 3px 7px 3px;" ng-repeat="id in sources|limitTo:scrollLimit" ng-controller="rv.controllers.source"
+                        ng-click="toggle(id)" ng-class="{'active': isSelected(id)}">
+                    <div>
+                        <a href="" style="display: inline-block" title="Source properties" ng-click="editSource(); $event.stopPropagation();">
+                            <h2 class="voffset1"><span ng-if="server.source.senders.length > 0" ng-bind="server.source.name ? server.source.name : '(unnamed)'" 
+                                    ng-style="{color: server.source.name?'inherit':'#aaa'}"></span>&nbsp;</h2>
+                        </a>
+                    </div>
+                    <div ng-switch="server.sender.state">
+                        <span ng-switch-when="0">
+                        </span>
+                        <span ng-switch-when="1">
+                            <ul class="list-inline" ng-if="tracks">
+                                <li ng-repeat="track in tracks track by ($id(tracks)+$index)">
+                                    <span class="label label-default">{{trackLabels[$index]}}</span>
+                                </li>
+                                <li>&nbsp;</li>
+                            </ul>
+                        </span>
+                        <span class="text-danger" ng-switch-default>
+                            <i class="fa fa-exclamation-circle"></i>
+                            <span ng-switch="server.sender.state">
+                                <span ng-switch-when="-13"><span>A stream with this multicast/port combination already exists</span></span>
+                                <span ng-switch-when="-12"><span>Could not set channel map</span></span>
+                                <span ng-switch-when="-11"><span>Could not create session</span></span>
+                                <span ng-switch-when="-10"><span>Could not create stream</span></span>
+                                <span ng-switch-default><span>Unknown error</span></span>
+                            </span>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-6" ng-controller="rv.controllers.destinations">
+        <div class="row">
+            <h1><i class="fa fa-download fa-rotate-90"></i> Destinations</h1>
+        </div>
+        <div class="row" ng-if="expertMode[0]">
+            <ul class="list list-inline" style="margin-bottom: 0px;">
+                <li>
+                    <button class="btn btn-default btn-xs" title="Select all" ng-click="selectAll()" ng-if="selected.length == 0" ng-disabled="destinations.length == 0"><i class="fa fa-fw fa-square-o"></i></button>
+                    <button class="btn btn-default btn-xs" title="Select none" ng-click="selectNone()"  ng-if="selected.length > 0  &&  selected.length < destinations.length"><i class="fa fa-fw fa-minus-square-o"></i></button>
+                    <button class="btn btn-default btn-xs" title="Select none" ng-click="selectNone()"  ng-if="selected.length > 0  &&  selected.length == destinations.length"><i class="fa fa-fw fa-check-square-o"></i></button>
+                </li>        
+                <li><button class="btn btn-default btn-xs" title="Create a new destination" ng-click="addDestination()"><i class="fa fa-plus"></i> Create</button></li>
+                <li>
+                    <button class="btn btn-warning btn-xs" title="Delete selected destination(s)" ng-disabled="selected.length == 0" ng-click="deleteSelected()"><i class="fa fa-trash"></i> Delete</button>
+                </li>
+            </ul>
+        </div>
+        <div class="row voffset2">
+            <ul class="list-unstyled" infinite-scroll="addItems()" infinite-scroll-distance="2">
+                <li class="show-hover" style="border-top: 1px solid #eee; padding: 0 3px 7px 3px; user-select: none;" 
+                        ng-repeat="id in destinations|limitTo:scrollLimit" ng-controller="rv.controllers.destination"
+                        ng-click="toggle(id)" ng-class="{'active': isSelected(id)}">
+                    <div>
+                        <a style="display: inline-block" href="" ng-click="editDestination(); $event.stopPropagation();">
+                            <h2 class="voffset1" ng-click-disabled="selectSource(); $event.stopPropagation();" >
+                                <span ng-if="server.destination.receivers.length > 0" 
+                                        ng-bind="server.parsedSdp.name  ||  server.destination.uri || '(no source)'"
+                                        title="Destination properties"
+                                        ng-class="{'text-muted': !(server.destination.uri || sourceURI)}"></span>&nbsp;
+                            </h2>
+                        </a>
+                        <span ng-if="server.receiver.state == 1  &&  server.destination.sdp.length > 0  &&  server.receiver.stats.rtcpReceiverReports['0'].fractionalLost > 0">
+                            <i class="fa fa-exclamation-circle text-danger" title="Problems detected while receiving this source."></i>
+                        </span>
+                    </div>
+                    <div ng-switch="server.receiver.state">
+                        <span ng-switch-when="0">
+                        </span>
+                        <span ng-switch-when="1">
+                            <!-- destination is fully configured - check if an SDP could be retrieved -->
+                            <span class="animated infinite flash text-warning" ng-if="server.destination.uri.length > 0  &&  server.destination.sdp.length == 0">
+                                Resolving SDP ...
+                            </span>
+                            <div ng-if="server.destination.sdp.length > 0">
+                                <ul class="list-unstyled list-inline">
+                                    <li ng-repeat="track in tracks track by ($id(tracks)+$index)">
+                                        <span class="label label-default" title="{{getLabel(track)}} -> {{trackLabels[$index]}}">{{trackLabels[$index]}}</span>
+                                    </li>
+                                    <li>&nbsp;</li>
+                                </ul>
+                            </div>
+                        </span>
+                        <span class="text-danger" ng-switch-default>
+                            <span ng-switch="server.receiver.state">
+                                <i class="fa fa-exclamation-circle"></i>
+                                <span class="text-danger" title="Channel map collision" ng-switch-when="-30">Channel map collision.</span>
+                                <span class="text-danger" title="SDP sync time attribute missing" ng-switch-when="-23">SDP sync time attribute error.</span>
+                                <span class="text-danger" title="SDP payload error" ng-switch-when="-22">SDP payload error.</span>
+                                <span class="text-danger" title="SDP clock mismatch" ng-switch-when="-21">SDP clock mismatch.</span>
+                                <span class="text-danger" title="SDP channel count mismatch" ng-switch-when="-20">SDP channel count mismatch.</span>
+                                <span class="text-danger" title="A stream with this multicast/port combination already exists" ng-switch-when="-13">A stream with this multicast/port combination already exists.</span>
+                                <span class="text-danger" ng-switch-default>An unknown error occured.</span>
+                            </span>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

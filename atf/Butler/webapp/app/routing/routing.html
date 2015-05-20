@@ -1,0 +1,21 @@
+<form class="container">
+    <h1>Routing Matrix</h1>
+    
+    <p>This page lists all the output ports of the routing matrix together with the currently connected input of each.<br/>
+        You can re-route inputs to outputs by clicking on any of the outputs/output groups</br>
+    
+    <div class="rav-media" ng-repeat="(block, outputs) in routing.outputs" style="">
+        <h2>{{block|uppercase}}</h2>
+        <select style="margin-bottom: 6px;" ng-model="combine[block]" ng-init="combine[block] = (combine[block] || countOutputs(block))">
+            <option>1</option>
+            <option>2</option>
+            <option>8</option>
+            <option>64</option>
+        </select>
+        
+        <div ng-repeat="i in []|range:countOutputs(block)/combine[block]">
+            <div class="port-routing" items="outputs" port="$index * combine[block]" combine="combine[block]" block="block" ng-click="selected(block, $index * combine[block], combine[block])"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</form>

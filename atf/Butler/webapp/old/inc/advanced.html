@@ -1,0 +1,36 @@
+<form>
+    <h1>Advanced</h1>
+    <input type="checkbox" ng-model="expertMode[0]"> Enable expert mode</input>
+    
+    <div ng-show="expertMode[0]">
+        <h2>Logging</h2>
+        <div ng-controller="rv.controllers.logProcesses">
+            <div ng-repeat="process in processes">
+                <h3>{{process}}</h3>
+                <div>
+                    <div style="max-height: 200px; overflow-y: scroll;" ng-controller="rv.controllers.logging">
+                        <table class="table table-hover table-condensed">
+                            <tr ng-repeat="category in local.categories" ng-controller="rv.controllers.logCategory">
+                                <td><label style="margin: 0 0; line-height: 30px;">{{category}}</label></td>
+                                <td class="span3"><select class="form-control" style="margin-bottom: 0px" ng-model="value" ng-options="l.value as l.label for l in logLevels" ng-disabled="value == -1"></select></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div ng-show="expertMode[0]">
+        <h2>Log Files</h2>
+        <span ng-repeat="logfile in _capabilities.logfiles">
+            <a href="{{logfile}}" target="_blank">{{logfile}}</a>
+            <span ng-hide="$last">, </span>
+        </span>
+    </div>
+    
+    <div ng-show="expertMode[0]">
+        <h2>Processes</h2>
+        <a href="/top" target="_blank">List running processes</a>
+    </div>
+</form>

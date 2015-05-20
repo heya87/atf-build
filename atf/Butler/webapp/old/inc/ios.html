@@ -1,0 +1,27 @@
+<!-- IOs stuff -->
+<div>
+    <h1>Medias</h1>
+    <table class="table table-hover table-condensed" ng-controller="rv.controllers.medias">
+        <tr style="cursor:pointer;" ng-repeat="ioName in medias()" ng-controller="rv.controllers.media" ng-click="go('/media/' + encodeIOName(ioName)); $event.stopPropagation();">
+            <td style="width: 30px;">
+                <span class="text-success" ng-if="server.configured"><i class="icon-off"></i></span>
+                <span ng-if="!server.configured"><i class="icon-off"></i></span>
+            </td>
+            <td style="width: 240px;">
+                <div>{{ioName}}</div>
+            </td>
+            <td>
+                <div class="inline-form" ng-if="server.configured">
+                    <div><label>Block size</label> {{server.configuration.audioBlockSize}} frames</div> 
+                    <div><label>Sample rate</label> {{server.configuration.sampleRate}} Hz</div> 
+                    <div ng-if="server.configuration.channelCountCapture > 0"><label>Capture tracks</label> {{server.configuration.channelCountCapture}}</div> 
+                    <div ng-if="server.configuration.channelCountPlay > 0"><label>Play tracks</label> {{server.configuration.channelCountPlay}}</div>
+                    <div ng-if="local.configuration.vcxo > 0"><label>VCXO</label> {{server.configuration.vcxo}}</div>
+                </div>
+            </td>
+            <td>
+                <a title="Edit channel labels" ng-if="server.configured" ng-click="go('/media/' + encodeIOName(ioName) + '/labels'); $event.stopPropagation();"><i class="icon-tasks"></i> Edit labels</a>
+            </td>
+        </tr>
+    </table>
+</div>        

@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h1 class="modal-title">About</h1>
+</div>
+<div class="modal-body">
+    <h2>Version</h2>
+    <div class="form-horizontal" ng-controller="rv.controllers.about">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Butler</label>
+            <div class="col-sm-9"><p class="form-control-static">{{_version.butler}}</p></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Streamer</label>
+            <div class="col-sm-9"><p class="form-control-static">{{_version.streamer}} <span ng-show="_version.expire">, expires: {{_version.expire}}</span></p></div>
+        </div>
+    </div>
+    
+    <div class="voffset2"></div>
+    
+    <h2>Credits</h2>
+    <div>This software utilizes the following Open-source software:</div>
+    <ul class="list-unstyled list-inline">
+        <li><a href="http://angularjs.org" target="_blank">AngularJS</a></li>
+        <li><a href="http://avahi.org" target="_blank">AVAHI</a></li>
+        <li><a href="https://developer.apple.com/bonjour" target="_blank">Bonjour</a></li>
+        <li><a href="http://boost.org" target="_blank">Boost C++ Libraries</a></li>
+        <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></li>
+        <li><a href="http://cmake.org" target="_blank">CMake</a></li>
+        <li><a href="http://www.flotcharts.org/" target="_blank">Flot</a></li>
+        <li><a href="http://digip.org/jansson" target="_blank">Jansson</a></li>
+        <li><a href="http://jsoncpp.sourceforge.net" target="_blank">JsonCpp</a></li>
+        <li><a href="http://jquery.org" target="_blank">JQuery</a></li>
+        <li><a href="http://log4c.sourceforge.net" target="_blank">log4c</a></li>
+        <li><a href="http://www.sourceware.org/pthreads-win32" target="_blank">Pthreads Win32</a></li>
+        <li><a href="http://www.music.mcgill.ca/~gary/rtaudio" target="_blank">RTAudio</a></li> 
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+</div>

@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h1 class="modal-title">{{mediaName}} - Labels</h1>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="max-height: 162px;" ng-show="local.configuration.channelCountCapture > 0"><!-- max-height is needed here for IE9 -->
+            <label class="col-sm-3 control-label">Capture tracks</label>
+            <div class="col-sm-9">
+                <div style="max-height: 160px; overflow-y: scroll;">
+                    <table class="table table-hover table-condensed table-light">
+                        <tr ng-repeat="channel in local.inputs|asArray">
+                            <td><label style="margin: 0 0; line-height: 30px;">{{$index}}.</label></td>
+                            <td><input class="form-control" type="text" style="margin-bottom: 0px;" ng-model="local.inputs[$index].labels.user"></input></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group" style="max-height: 162px; margin-top: 20px;" ng-show="local.configuration.channelCountPlay > 0"><!-- max-height is needed here for IE9 -->
+            <label class="col-sm-3 control-label">Play tracks</label>
+            <div class="col-sm-9">
+                <div style="max-height: 160px; overflow-y: scroll;">
+                    <table class="table table-hover table-condensed table-light">
+                        <tr ng-repeat="channel in local.outputs|asArray">
+                            <td><label style="margin: 0 0; line-height: 30px;">{{$index}}.</label></td>
+                            <td><input class="form-control" type="text" style="margin-bottom: 0px;" ng-model="local.outputs[$index].labels.user"></input></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()" ng-disabled="isClean()">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>

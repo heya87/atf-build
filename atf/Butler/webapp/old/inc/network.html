@@ -1,0 +1,51 @@
+<div>
+    <h1>Network</h1>
+    <div>
+        <form class="form form-horizontal" ng-controller="rv.controllers.hostname">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Hostname</label>
+                <script style="display: none;">
+                    var inputElement = document.getElementById('hostname');
+                    var scope = angular.element(inputElement).scope(); 
+                    scope.focusHostname = function() { window.setTimeout(function() { document.getElementById('hostname').focus(); }, 100); };
+                </script>
+                <span ng-hide="editing">
+                    {{server.hostname}} <a title="Edit the TCP/IP hostname" ng-show="expertMode[0]" ng-click="editing=true; focusHostname();"><i class="icon-pencil"></i></a>
+                </span>
+		        <div class="col-sm-4" ng-show="editing">
+                    <input class="form-control" id="hostname" name="hostname" type="text" ng-model="local.hostname" ng-pattern="hostnamePattern" ng-disabled="disabled" required 
+                        ui-keypress="{27: 'reset(); editing=false;', 13: 'hostnameForm.$valid && (save() + (editing=false))'}"
+                        ui-event="{blur : 'reset(); editing=false;'}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Gateway</label>
+                <div class="com-sm-4">{{server.gateway}}</div>
+            </div>
+        </form>
+        <h2 style="margin-top: 10px;">Interfaces</h2>
+        <table class="table table-hover table-condensed" ng-controller="rv.controllers.networkInterfaces">
+            <tr style="cursor:pointer;" ng-repeat="ifName in interfaces" ng-controller="rv.controllers.networkInterface" ng-click="go('/network_if/' + ifName)">
+                <td>
+                    {{ifName}}
+                </td>
+                <td>
+                    <div class="inline-form" ng-hide="editing">
+                        <div>
+                            <label>Configuration</label>
+                            <span>{{configs[server.config].label}}</span>
+                        </div>
+                        <div>
+                            <label>IP Address</label>
+                            <span>{{server.address}}</span>
+                        </div>
+                        <div>
+                            <label>Network Mask</label>
+                            <span>{{server.netmask}}</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<h1><i class="fa fa-volume-off"></i> Media</h1>
+<div ng-controller="rv.controllers.medias" style="max-height: 100px; overflow-y: ondemand; overflow-x: hidden;">
+    <div ng-repeat="mediaName in mediaNames" ng-controller="rv.controllers.media">
+        <div class="row">
+            <div class="col-sm-9 text-nowrap">
+                <a href="" title="{{mediaName}}" ng-click="editProperties();$event.stopPropagation();">
+                    <h2 class="novoffset" style="overflow: hidden; text-overflow: ellipsis;">{{mediaName}}</h2>
+                </a>
+            </div>
+            <div class="col-sm-3" ng-if="server.configured" title="Configured sample rate">
+                <span class="visible-xs-inline"><label>Sample rate</label> </span>
+                <span>{{server.configuration.sampleRate / 1000.0}}kHz</span>
+            </div>
+            <!--div class="col-lg-1 col-md-2" ng-if="server.configured">
+                <span class="visible-xs-inline"><label>Track labels</label> </span>
+                <a href="" title="Edit track labels." ng-click="editLabels(); $event.stopPropagation();"><i class="fa fa-list-ol"></i></a>
+            </div -->
+        </div>
+    </div>
+</div>
+<div ng-if="expertMode[0]  &&  _capabilities.routing"><a href="#/routing" title="Configure routing matrix">Configure routing matrix ...</a></div>

@@ -1,0 +1,87 @@
+<div>
+    <h2>Stream Source</h2>
+    <span static-include="'app/destination/selectSource.html'"></span>
+
+    <hr>
+
+    <h2>Receiver Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Delay</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input type="number" class="form-control" title="The play-out delay in samples used for this stream." required
+                        ng-model="local.receiver.delay" ng-disabled="!expertMode[0]"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                                ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="c in local.receiver.delay_OPTIONS">
+                                <a href="" ng-click="local.receiver.delay=c">{{c}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Syntonized Mode</label>
+            <div class="col-sm-9">
+                <input type="checkbox" class="checkbox" title="Forces receiving of this session in syntonized mode." ng-model="local.receiver.syntonized" ng-disabled="!expertMode[0]"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Channel count</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" title="The number of channels in the stream"  
+                    ng-model="channelCount" min="0" ng-disabled="!expertMode[0]  ||  local.destination.sdp.length > 0" required></input>
+            </div>
+        </div>
+    </form>
+    
+    <h2>Media Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Media</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="media" ng-options="io for io in medias" ng-disabled="!expertMode[0]  ||  (medias.length == 1 && medias[0] == media)"></select>
+            </div>
+        </div>
+        <div class="form-group" ng-show="expertMode[0]">
+            <label class="col-sm-3 control-label">Consecutive tracks</label>
+            <div class="col-sm-9">
+                <input type="checkbox" class="checkbox" ng-model="isMapLinked" ng-disabled="!expertMode[0]"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Play tracks</label>
+            <div class="col-sm-9">
+                <div ng-if="isMapLinked">
+                    <select class="form-control" ng-model="map[0]" ng-options="track[0] as linkedOutsLabels[track[0]] for track in linkedOuts" 
+                        ng-disabled="!expertMode[0]" style="margin-bottom: 2px"></select>
+                    <!--div class="input-group">
+                        <button type="text" style="text-align: left;" class="form-control" title="The play out tracks to be used" required
+                            ng-model="map[0]" ng-disabled="!expertMode[0]">{{linkedOutsLabels[map[0]]}}</button>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                                    ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu" style="max-height: 150px; overflow-y: scroll;">
+                                <li ng-repeat="linkedOut in linkedOuts">
+                                    <a href="" ng-click="map[0]=$index">{{linkedOutsLabels[$index]}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div-->
+                </div>
+                <div style="max-height: 150px; overflow-x: hidden; overflow-y: auto;" ng-if="!isMapLinked">
+                    <div ng-repeat="ch in [] | range:channelCount">
+                        <select class="form-control" ng-model="map[$index]" ng-options="track as outputs[track] for track in outputIndices" 
+                            ng-disabled="!expertMode[0]" ng-required style="margin-bottom: 2px">
+                            <option value="">Not connected</option>
+                        </select>
+                    </div>
+                </div>                                    
+            </div>
+        </div>
+    </form>
+</div>

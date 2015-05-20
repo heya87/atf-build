@@ -1,0 +1,42 @@
+<!-- Identity stuff -->
+<div>
+    <div style="width: 490px; position: relative;" ng-controller="rv.controllers.identity">
+        <div style="position: absolute; right: 0; height: 90px; width: 180px" ng-switch on="server.company">
+            <img src="./img/vendor_dot.png" alt="Loading..." ng-switch-when="DirectOut Technologies"></img>
+            <img src="./img/vendor_merging.png" alt="Loading..." ng-switch-when="Merging Technologies"></img>
+            <img src="./img/vendor_lawo.png" alt="Loading..." ng-switch-when="LAWO"></img>
+            <img src="./img/vendor_lawo.png" alt="Loading..." ng-switch-when="Lawo AG"></img>
+            <img src="./img/vendor_alc.png" alt="Loading..." ng-switch-default></img>
+        </div>
+        <div class="container" style="width: 400px;" id="identityForm" style="margin-bottom: 0px;">
+            <div class="row">
+                <label class="col-sm-2">Vendor</label>
+                <div>{{server.company}}</div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2">Product</label>
+                <div>{{server.product}}</div>
+            </div>
+            <div class="row">
+                <label class="col-sm-2">Serial</label>
+                <div>{{server.serial}}</div>
+            </div>
+            <form class="row" name="identityForm">
+                <label class="col-sm-2" style="line-height: 23px">Name</label>
+                <script style="display: none;">
+                    var deviceNameElement = document.getElementById('deviceName');
+                    var scope = angular.element(deviceNameElement).scope();
+                    scope.focusDeviceName = function() { window.setTimeout(function() { deviceNameElement.focus(); }, 100); };
+                </script>
+                <div ng-hide="editing">
+                    <span style="max-width: 175px; white-space: nowrap; display: inline-block; overflow: hidden;">{{server.name}}</span>
+                    <a title="Edit the device name" style="display: inline-block; vertical-align: top;" ng-show="expertMode[0]  &&  !disabled" ng-click="editing=true; focusDeviceName();"><i class="icon-pencil"></i></a>
+                </div>
+                <input id="deviceName" class="form-control" name="deviceName"
+                    style="height: inherit; padding: 0px; width: 175px; display: inline-block;" type="text" ng-show="editing" ng-model="local.name" ng-minlength="1" ng-maxlength="32" 
+                    ng-disabled="disabled" required ng-keydown="onKeyPress($event)" ng-blur="reset(); editing=false;"></input>
+                <span class="text-warning" title="The name is too long" ng-show="editing  &&  identityForm.deviceName.$error.maxlength"><i class="icon-warning-sign"></i></span>
+            </div>
+        </div>
+    </div>
+</div>

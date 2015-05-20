@@ -1,0 +1,33 @@
+<div class="modal-header">
+    <h1 class="modal-title">Interface {{ifName}}</h1>
+</div>
+<div class="modal-body">
+    <form class="form form-horizontal" role="form" name="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Configuration</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="local.config" ng-options="c.id as c.label for c in configs" ng-disabled="disabled()" required></select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="local.config == 0">
+            <label class="col-sm-3 control-label">Address</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" ng-model="local.address" ng-pattern="ipAddressAndPortPattern" ng-disabled="disabled()" required />
+            </div>
+        </div>
+        <div class="form-group" ng-if="local.config == 0">
+            <label class="col-sm-3 control-label">Network Mask</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" ng-model="local.netmask" ng-pattern="ipAddressPattern" ng-disabled="disabled()" required />
+            </div>
+        </div>
+    </form>
+    <div class="alert alert-warning voffset3" style="margin-bottom: 0" ng-if="(form.$valid  &&  !isClean())  ||  rebootRequired">
+        Changes will not take effect until after the device is rebooted.
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" ng-if="rebootRequired && expertMode[0]" ng-click="$close();">Reboot</button>
+    <button class="btn btn-warning" ng-if="expertMode[0]" ng-click="save();" ng-disabled="!form.$valid  ||  isClean()">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>

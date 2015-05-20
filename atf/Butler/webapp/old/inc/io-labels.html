@@ -1,0 +1,49 @@
+<!-- A single IO -->
+<div ng-controller="rv.controllers.media">
+    <div>
+        <h1>
+            <span ng-switch on="server.configured">
+                <span class="text-success" ng-switch-when="true"><i class="icon-off"></i></span>
+                <span class="text-error" ng-switch-when="false"><i class="icon-off"></i></span>
+            </span>
+            <span style="font-weight: bold">{{ioName}}</span>
+        </h1>
+        <div class="alert alert-info" ng-show="server.configured  &&  inUse">This device is currently in use.</div>
+        <div class="rav-container" ng-show="server.configured">
+            <form class="form-horizontal" role="form">
+                <div class="form-group" style="max-height: 162px;" ng-show="local.configuration.channelCountCapture > 0"><!-- max-height is needed here for IE9 -->
+                    <label class="col-sm-2 control-label">Capture tracks</label>
+                    <div class="col-sm-4">
+                        <div style="max-height: 160px; overflow-y: scroll;">
+                            <table class="table table-hover table-condensed">
+                                <tr ng-repeat="channel in local.inputs|asArray">
+                                    <td><label style="margin: 0 0; line-height: 30px;">{{$index}}.</label></td>
+                                    <td><input class="form-control" type="text" style="margin-bottom: 0px;" ng-model="local.inputs[$index].labels.user"></input></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group" style="max-height: 162px; margin-top: 20px;" ng-show="local.configuration.channelCountPlay > 0"><!-- max-height is needed here for IE9 -->
+                    <label class="col-sm-2 control-label">Play tracks</label>
+                    <div class="col-sm-4">
+                        <div style="max-height: 160px; overflow-y: scroll;">
+                            <table class="table table-hover table-condensed">
+                                <tr ng-repeat="channel in local.outputs|asArray">
+                                    <td><label style="margin: 0 0; line-height: 30px;">{{$index}}.</label></td>
+                                    <td><input class="form-control" type="text" style="margin-bottom: 0px;" ng-model="local.outputs[$index].labels.user"></input></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="clearfix"></div>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-warning" style="margin-right: 10px;" ng-click="save(); goBack();">Apply</button>
+                <button class="btn btn-primary" ng-click="goBack();">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

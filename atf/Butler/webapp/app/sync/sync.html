@@ -1,0 +1,21 @@
+<h1><i class="fa fa-clock-o"></i> Sync</h1>
+<div ng-controller="rv.controllers.sync">
+    <div ng-if="server.sync=='internal'" class="row">
+        <div class="col-sm-12">
+            <h2 class="novoffset">Internal</h2>
+        </div>
+    </div>
+    <div ng-if="server.sync=='wordClock'" class="row">
+        <div class="col-sm-12">
+            <h2 class="novoffset">External word clock</h2>
+        </div>
+    </div>
+    <div ng-if="server.sync=='PTP'">
+        <div ng-include="'app/ptp/ptp.html'"></div>
+    </div>
+    <div ng-if="server.sync=='raLink'" class="row">
+        <div class="col-sm-12">
+            <h2 class="novoffset">RA-Link</h2>
+        </div>
+    </div>
+</div>

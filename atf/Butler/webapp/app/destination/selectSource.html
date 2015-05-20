@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="input-group">
+            <input type="text" class="form-control" ng-model="local.destination.uri"  ng-disabled="!expertMode[0]"></input>
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                     ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                <ul ng-init="listSessions()" class="dropdown-menu dropdown-menu-right" role="menu" style="max-height: 200px; overflow-y: scroll;">
+                    <li ng-repeat="session in discoveredSessions">
+                        <a href="" ng-click="local.destination.uri=session">{{session|sourceURI}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row voffset0">
+    <div class="col-sm-12 voffset2">
+        <div ng-switch="showUnformatted" ng-init="showUnformatted=false;">
+            <div ng-switch-when="false">
+                <ul class="list list-inline list-unstyled" style="margin-bottom: 2px;">
+                    <li><label>Name</label> {{local.parsedSdp.name}}</li>
+                    <li><label>Codec</label> {{local.parsedSdp.streams[0].codec}}</li>
+                    <li><label>Sample rate</label> {{local.parsedSdp.streams[0].sampleRate}}Hz</li> 
+                </ul>
+                <ul class="list list-inline list-unstyled">
+                    <li><label>Channels</label></li>
+                    <li ng-repeat="channel in local.parsedSdp.streams[0].channels track by $index">
+                        <span class="label label-default" title="{{channel}}">{{channel  ||  'unknown'}}</span>
+                    </li>
+                    <li>&nbsp;</li>
+                </ul>
+
+                <!-- form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 text-right control-label">Codec</label>
+                        <div class="col-sm-9 form-control-static">{{local.parsedSdp.streams[0].codec}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Sample Rate</label>
+                        <div class="col-sm-9 form-control-static">{{local.parsedSdp.streams[0].sampleRate}}Hz</div>
+                    </div>
+                    <!--div class="row"><label class="col-sm-4">Frame size</label><div class="col-sm-8">{{local.parsedSdp.streams[0].frameCount}}</div></div - ->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Channels</label>
+                        <div class="col-sm-9 form-control-static">{{local.parsedSdp.streams[0].channels|channelList}}</div>
+                    </div>
+                </form-->
+                
+                <div ng-show="streamClass" style="font-weight: bold" ng-style="{'color': streamClass.color}">
+                    <span ng-if="streamClass.icon"><img ng-src="{{streamClass.icon}}" style="margin-bottom: 2px;" height="14px"> </span>{{streamClass.text}}
+                </div>                            
+            </div>
+            <div ng-switch-when="true" ng-init="sdpDisabled=true;" ng-dblclick="sdpDisabled=false;">
+                <textarea class="form-control" style="height: 150px; max-height: 150px; min-height: 150px; width: 100%; max-width: 100%; font-size: 90%" 
+                    ng-model="local.destination.sdp" ng-disabled="sdpDisabled" ng-change="parseLocalSdp()"></textarea>
+            </div>
+        </div>
+        <div class="well" style="position: absolute; top: 0; right: 15px; padding: 2px 3px 2px 3px;">
+            <div class="checkbox" style="margin: 0 0;">
+                <label>
+                    <input type="checkbox" ng-checked="showUnformatted" ng-click="showUnformatted=!showUnformatted;"></input>
+                    Show raw SDP
+                </label>
+            </div>                                        
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+{
+  "name": "cometd-javascript-bower",
+  "version": "3.0.0-SNAPSHOT",
+  "authors": [
+    "Clay Hinson <clayhinson@gmail.com>"
+  ],
+  "description": "Bower-installable distribution of the cometd javascript libraries (from https://github.com/cometd/cometd). The version number tracks the current release of the cometd library.",
+  "keywords": [
+    "cometd"
+  ],
+  "license": "apache-2.0",
+  "homepage": "http://cometd.org/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "build.sh"
+  ],
+  "_release": "3.0.0-SNAPSHOT",
+  "_resolution": {
+    "type": "version",
+    "tag": "3.0.0-SNAPSHOT",
+    "commit": "6cb1fe985e73420c1b4da9846ae527a71c134337"
+  },
+  "_source": "git://github.com/clayhinson/cometd-javascript-bower.git",
+  "_target": "~3.0.0-SNAPSHOT",
+  "_originalSource": "cometd-javascript-bower",
+  "_direct": true
+}

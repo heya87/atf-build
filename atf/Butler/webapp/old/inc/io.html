@@ -1,0 +1,56 @@
+<!-- A single IO -->
+<div ng-controller="rv.controllers.media">
+    <div>
+        <h1>
+            <span ng-switch on="server.configured">
+                <span class="text-success" ng-switch-when="true"><i class="icon-off"></i></span>
+                <span class="text-error" ng-switch-when="false"><i class="icon-off"></i></span>
+            </span>
+            <span style="font-weight: bold">{{ioName}}</span>
+        </h1>
+        <div class="alert alert-info" ng-show="server.configured  &&  inUse">This device is currently in use.</div>
+        <div class="rav-container">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Audio block size</label>
+		            <div class="col-sm-4" style="position: relative">
+                        <select class="form-control" ng-model="local.configuration.audioBlockSize" ng-options="bs for bs in local.capabilities.audioBlockSize"></select>
+                        <input class="form-control" title="The number of samples per audio interrupt." ng-model="local.configuration.audioBlockSize" type="number" requried />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Sample rate</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" ng-model="local.configuration.sampleRate" ng-options="sr for sr in local.capabilities.sampleRate" required></select>
+                    </div>
+                </div>
+                <!--div class="form-group" ng-show="server.capabilities.channelCountCapture > 0  &&  !server.configured">
+                    <label class="col-sm-2 control-label">Capture tracks</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" ng-model="local.configuration.channelCountCapture" type="number" min="0" max="{{server.capabilities.channelCountCapture}}"
+                            ng-disabled="server.configured" required />
+                    </div>
+                </div>
+                <div class="form-group" ng-show="server.capabilities.channelCountPlay > 0  &&  !server.configured">
+                    <label class="col-sm-2 control-label">Play tracks</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" ng-model="local.configuration.channelCountPlay" type="number" min="0" max="{{server.capabilities.channelCountPlay}}"
+                            ng-disabled="server.configured" required />
+                    </div>
+                </div -->
+                <div class="form-group" ng-show="server.configuration.vcxo > 0">
+                    <label class="col-sm-2 control-label">VCXO</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="number" ng-model="local.configuration.vcxo" min="1" max="65535" ng-disabled="server.configured" />
+                    </div>
+                </div>
+            </form>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-warning" style="margin-right: 10px;" ng-click="allocate(); goBack()" ng-disabled="ioForm.$invalid" ng-if="!server.configured">Allocate</button>
+                <button class="btn btn-warning" style="margin-right: 10px;" ng-click="release();" ng-if="server.configured">Release</button>
+                <button class="btn btn-warning" style="margin-right: 10px;" ng-click="allocate(); goBack();" ng-disabled="ioForm.$invalid" ng-if="server.configured  &&  !isClean()">Apply</button>
+                <button class="btn btn-primary" ng-click="goBack();">Back</button>
+            </div>
+        </div>
+    </div>
+</div>

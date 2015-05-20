@@ -1,0 +1,80 @@
+<div class="modal-header">
+    <h1 class="modal-title">{{mediaName}}</h1>
+</div>
+<div class="modal-body">
+    <form name="mediaForm" class="form-horizontal" role="form">
+        <div class="form-group" ng-if="local.capabilities.audioBlockSize">
+            <label class="col-sm-3 control-label">Audio block size</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input class="form-control" ng-model="local.configuration.audioBlockSize" ng-disabled="!allowChangeSettings()"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" ng-disabled="!allowChangeSettings()">
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="bs in local.capabilities.audioBlockSize">
+                                <a href="" ng-click="local.configuration.audioBlockSize=bs;">{{bs}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Sample rate</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="local.configuration.sampleRate"  ng-disabled="!allowChangeSettings()" 
+                    ng-options="sr for sr in local.capabilities.sampleRate" required></select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="local.sync!==undefined" ng-init="local.sync=(local.sync ||  'PTP')">
+            <label class="col-sm-3 control-label">Sync source</label>
+            <div class="col-sm-9">
+                <select class="form-control" title="The sync source used." ng-model="local.sync" required ng-disabled="!allowChangeSettings()">
+                    <!--option value="internal">Internal</option-->
+                    <option value="wordClock">External word clock</option>
+                    <option value="PTP">PTP</option>
+                    <!--option value="raLink">RA-Link</option-->
+                </select>
+            </div>
+        </div>
+        <!-- div class="form-group" ng-show="server.capabilities.channelCountCapture > 0">
+            <label class="col-sm-3 control-label">Capture tracks</label>
+            <div class="col-sm-9">
+                <input class="form-control" ng-model="local.configuration.channelCountCapture" type="number" min="0" max="{{server.capabilities.channelCountCapture}}"
+                    ng-disabled="true" required />
+            </div>
+        </div>
+        <div class="form-group" ng-show="server.capabilities.channelCountPlay > 0">
+            <label class="col-sm-3 control-label">Play tracks</label>
+            <div class="col-sm-9">
+                <input class="form-control" ng-model="local.configuration.channelCountPlay" type="number" min="0" max="{{server.capabilities.channelCountPlay}}"
+                    ng-disabled="true" required />
+            </div>
+        </div>
+        <div class="form-group" ng-show="server.configuration.vcxo > 0">
+            <label class="col-sm-3 control-label">VCXO</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="number" ng-model="local.configuration.vcxo" min="1" max="65535" ng-disabled="server.configured" />
+            </div>
+        </div -->
+    </form>
+    <div class="alert alert-warning voffset3" style="margin-bottom: 0;" ng-if="inUse()">
+        This media is currently in use.
+        <div ng-show="server.configured  &&  !allowChangeSettings()">You need to delete all streams and release/re-allocate the media in order to change any settings.</div>
+    </div>
+    <div class="alert alert-warning voffset3" style="margin-bottom: 0;" ng-if="server.configured  &&  !inUse()  &&  !allowChangeSettings()">
+        You need to release and re-allocate the media in order to change any settings.
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" title="Allocates the media and makes it available for the streaming engine." 
+        ng-click="allocate();" 
+        ng-disabled="!mediaForm.$valid" ng-if="expertMode[0]  &&  !server.configured">Allocate</button>
+    <button class="btn btn-warning" title="Releases the media and stops all streams using it." 
+        ng-click="release();" ng-if="expertMode[0]  &&  server.configured  &&  (!inUse()  ||  allowChangeSettings())" ng-disabled="!expertMode[0]">Release</button>
+    <button class="btn btn-warning" title="Applies your changes. Active streams may be interrupted or the audio might be distorted." #
+        ng-click="save();" ng-show="!isClean()  &&  server.configured">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+</div>

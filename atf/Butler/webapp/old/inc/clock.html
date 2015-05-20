@@ -1,0 +1,102 @@
+<!-- PTP settings -->
+<div class="rav-container">
+    <h1>PTP</h1>
+    <div>
+        <h2>Status</h2>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Status</label>
+                <div class="col-sm-4">
+                    <span ng-switch on="server.state">
+                        <span class="text-info" ng-switch-when="1"><i class="icon-ellipsis-horizontal animated infinite flash"></i> Init</span>
+                        <span class="text-danger" ng-switch-when="2"><i class="icon-exclamation-sign"></i> Faulty</span>
+                        <span class="text-danger" ng-switch-when="3"><i class="icon-off"></i> Disabled</span>
+                        <span class="text-info" ng-switch-when="4"><i class="icon-exclamation-sign"></i> Listening</span>
+                        <span class="text-info" ng-switch-when="5"><i class="icon-exclamation-sign"></i> Pre Master</span>
+                        <span class="text-success" ng-switch-when="6"><i class="icon-ok"></i> Master</span>
+                        <span class="text-danger" ng-switch-when="7"><i class="icon-exclamation-sign"></i> Passive</span>
+                        <span class="text-danger" ng-switch-when="8"><i class="icon-exclamation-sign"></i> Uncalibrated</span>
+                        <span class="text-success" ng-switch-when="9">Slave</span>
+                        <span class="" ng-switch-default><i class="icon-question-sign"></i> Unknown</span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group" ng-show="server.state == 9"><!--  only show when slave -->
+                <label class="col-sm-2 control-label">Master</label>
+                <div class="col-sm-4">
+                    <span>{{server.masterIp}}</span>
+                </div>
+            </div>
+            <div class="form-group" ng-show="server.state == 9"><!--  only show when slave -->
+                <label class="col-sm-2 control-label">Offset from master</label>
+                <div class="col-sm-4">
+                    <span>{{server.offsetFromMaster}} µs</span>
+                </div>
+            </div>
+            <div class="form-group" ng-show="server.state == 9"><!--  only show when slave -->
+                <label class="col-sm-2 control-label">Offset</label>                
+                <div class="col-sm-offset-2" style="position: relative; padding-left: 15px;">
+                    <span class="flot"
+                        flot-data="graphData" flot-options="graphOptions" 
+                        ng-init="graphOptions={yaxis: {labelWidth: 35}, xaxis: {show: false}, grid: {borderWidth: 0.1}}" ></span>
+                </div>
+            </div>
+        </form>
+        <h2>Settings</h2>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Domain</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="number" ng-model="local.domain" min="0" max="9" ng-disabled="disabled  ||  !expertMode[0]" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Prio1</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="number" ng-model="local.prio1" min="0" max="255" ng-disabled="disabled  ||  !expertMode[0]" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Prio2</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="number" ng-model="local.prio2" min="0" max="255" ng-disabled="disabled  ||  !expertMode[0]" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Announce interval</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="local.announce" ng-options="c.value as c.label for c in announces" ng-disabled="disabled  ||  !expertMode[0]" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Sync interval</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="local.sync" ng-options="c.value as c.label for c in syncs" ng-disabled="disabled  ||  !expertMode[0]" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Slave only</label>
+                <div class="col-sm-4">
+                    <input type="checkbox" ng-model="local.slaveOnly" ng-disabled="disabled  ||  !expertMode[0]"></input>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Delay mechanism</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="local.delayMechanism" ng-options="c.value as c.label for c in delayMechanisms" ng-disabled="disabled  ||  !expertMode[0]" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">DSCP</label>
+                <div class="col-sm-4" style="position: relative;">
+                    <select class="form-control" ng-model="local.dscp" ng-options="c.value as c.label for c in dscps" ng-disabled="disabled"></select>
+                    <input class="form-control" type="number" title="The QoS value used for this stream" ng-model="local.dscp" min="0" max="63" required />
+                </div>
+            </div>
+        </form>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-warning" style="margin-right: 10px" ng-show="expertMode[0]" ng-click="save(); goBack();" ng-disabled="clockForm.$invalid  ||  isClean()">Save</button>
+            <button class="btn btn-primary" ng-click="goBack()">Cancel</button>
+        </div>
+    </div>
+</div>

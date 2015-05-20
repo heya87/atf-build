@@ -1,0 +1,156 @@
+<div class="rav-container">
+    <h1>{{server.source.name}}</h1>
+    
+    <h2>Status</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Status</label>
+            <span style="padding-left: 15px;">
+                <span ng-show="server.sender.state >= 0" ng-switch on="server.sender.state">
+                    <span ng-switch-when="0">Not configured</span>
+                    <span ng-switch-when="1">
+                        <span ng-class="['text-success','text-warning','text-danger'][warnings.lost]">Configured</span>
+                    </span>
+                </span>
+                <span class="text-danger" ng-show="server.sender.state < 0" ng-switch on="server.sender.state">
+                    <span ng-switch-when="-13"><span>A stream with this multicast/port combination already exists</span></span>
+                    <span ng-switch-when="-12"><span>Could not set channel map</span></span>
+                    <span ng-switch-when="-11"><span>Could not create session</span></span>
+                    <span ng-switch-when="-10"><span>Could not create stream</span></span>
+                    <span ng-switch-default><span>Unknown error</span></span>
+                </span>
+            </span>
+        </div>
+        <div class="form-group" ng-controller="rv.controllers.source.rtcp" ng-show="server.sender.state == 2">
+            <label class="col-sm-2 control-label">Jitter (samples)</label>
+            <div class="col-sm-offset-2" style="position: relative; padding-left: 15px;">
+                <div class="flot" 
+                    flot-data="jitter" flot-options="graphOptions"                                     
+                    ng-init="graphOptions={yaxis: {labelWidth: 20}, xaxis: {show: false}, grid: {borderWidth: 0.1}}"></div>
+            </div>
+        </div>
+        <div class="form-group" ng-controller="rv.controllers.source.rtcp" ng-show="server.sender.state == 2">
+            <label class="col-sm-2 control-label">Lost packets</label>
+            <div class="col-sm-offset-2" style="position: relative; padding-left: 15px;">
+                <div class="flot" 
+                    flot-data="lost" flot-options="graphOptions"                                     
+                    ng-init="graphOptions={yaxis: {labelWidth: 20}, xaxis: {show: false}, grid: {borderWidth: 0.1}}"></div>
+            </div>
+        </div>
+    </form>
+    
+    <h2>Stream Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" title="The name of the stream" ng-model="local.source.name" ng-disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Address</label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" title="The multicast IP address of this stream" class="input-xlarge" ng-model="local.sender.address" ng-pattern="ipAddressPortTTLPatternWithAuto" ng-disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Payload</label>
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="currentPreset" style="background-color: {{presetHandler.colors[currentPreset]}}" ng-change="setPreset(currentPreset)">
+                    <option ng-repeat="(presetID, presetName) in presetHandler.names" value="{{presetID}}" style="background-color: white;">{{presetName}}</option>
+                    <option value="" style="background-color: white;">Custom</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="currentPreset.length">
+            <label class="col-sm-2 control-label">Channel count</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" title="The number of channels in this stream" 
+                    ng-model="channelCount" min="1" ng-disabled="disabled"></input>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="currentPreset.length">
+            <label class="col-sm-2 control-label">Codec</label>
+            <div class="col-sm-4">
+                <select class="form-control" title="The audio codec used for this stream" 
+                    ng-model="local.sender.codec" ng-options="c for c in codecs" ng-disabled="disabled" required></select>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="currentPreset.length">
+            <label class="col-sm-2 control-label">Frame size</label>
+            <div class="col-sm-4" style="position: relative">
+                <select class="form-control" ng-model="local.sender.codecParameters.frameSize" ng-options="c for c in local.sender.codecParameters.frameSize_OPTIONS" ng-disabled="disabled"></select>
+                <input class="form-control" type="number" title="The number of samples per channel per network packet" ng-model="local.sender.codecParameters.frameSize" ng-disabled="disabled"></input>
+            </div>
+        </div>
+        <div class="form-group" ng-show="expertMode[0]">
+            <label class="col-sm-2 control-label">DSCP</label>
+            <div class="col-sm-4" style="position: relative;">
+                <select class="form-control" ng-model="local.sender.dscp" ng-options="c.value as c.label for c in dscps" ng-disabled="disabled"></select>
+                <input class="form-control" type="number" title="The QoS value used for this stream" ng-model="local.sender.dscp" min="0" max="63" required />
+            </div>
+        </div>
+        <div class="form-group" ng-show="expertMode[0]">
+            <label class="col-sm-2 control-label">Payload ID</label>
+            <div class="col-sm-4">
+                <input class="form-control" type="number" title="The payload type used in the SDP" ng-model="local.sender.payload" min="96" max="127" ng-disabled="disabled" required />
+            </div>
+        </div>
+    </form>
+    
+    <h2>Media Settings</h2>
+    <form class="form form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Media</label>
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="media" ng-options="io for io in ioNames" ng-disabled="disabled  ||  (ioNames.length == 1 && ioNames[0] == media)" required></select>
+            </div>
+        </div>
+        <div class="form-group" ng-show="expertMode[0]">
+            <label class="col-sm-2 control-label">Consecutive tracks</label>
+            <div class="col-sm-4">
+                <input type="checkbox" class="checkbox" ng-model="isMapLinked" ng-disabled="disabled"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Recording tracks</label>
+            <div class="col-sm-4">
+                <div ng-if="isMapLinked">
+                    <select class="form-control" ng-model="map[0]" ng-options="track[0] as track|channelMap:inputs for track in linkedIns" 
+                        ng-disabled="disabled" required style="margin-bottom: 2px"></select>
+                </div>
+                <div style="max-height: 150px; overflow-x: hidden; overflow-y: auto;" ng-if="!isMapLinked">
+                    <div ng-repeat="ch in [] | range:channelCount">
+                        <select class="form-control" ng-model="map[$index]" ng-options="channel.index as channel|channelStatus for channel in inputs" 
+                            ng-disabled="disabled" ng-required style="margin-bottom: 2px">
+                        </select>
+                    </div>
+                </div>                                    
+                <!-- div ng-show="!isMapLinked">
+                    <input class="rvChannelMap" data="ins" ng-model="local.streams['0'].maps"></input>
+                </div -->                                
+            </div>
+        </div>                                
+    </form>
+    
+    <h2>Link</h2>
+    <form class="form form-horizontal" role="form">
+        <div class="form-group" ng-init="rtsp_uri = 'rtsp://' + location.host() + ':' + location.port() + '/by-id/'">
+            <label class="col-sm-2 control-label">RTSP URI</label>
+            <div class="col-sm-10"><a href="{{rtsp_uri}}{{server.source.id}}">{{rtsp_uri}}{{server.source.id}}</a></div>
+        </div>
+    </form>    
+    
+    <div style="margin-top: 20px"></div>
+    <div class="alert alert-info" ng-show="packetSize() > 0  &&  packetSize() <= 1440">
+        Your configuration results in {{packetSize()}} audio data bytes/packet.
+    </div>
+    <div class="alert alert-warning" ng-show="packetSize() > 1440">
+        Your configuration results in {{packetSize()}} audio data bytes/packet which may exceed the Ethernet MTU (depending on your network setup).
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <button class="btn btn-warning" ng-click="save(); goBack()" ng-disabled="form.$invalid  ||  isClean()">Save</button>
+        <button class="btn btn-primary" style="margin-left: 10px;" ng-click="goBack()">Cancel</button>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="modal-header">
+    <h1 class="modal-title">Source Properties</h1>
+</div>
+<div class="modal-body">
+    <div static-include="'app/source/source.html'"></div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-if="expertMode[0]" ng-click="$close(local)" ng-disabled="isClean()">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>

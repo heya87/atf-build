@@ -1,0 +1,158 @@
+<div class="rav-container">
+    <h1>{{server.receiver.label}}</h1>
+    
+    <h2>Status</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Status</label>
+            <span style="padding-left: 15px;">
+                <span ng-show="server.receiver.state >= 0" ng-switch on="server.receiver.state">
+                    <span class="" ng-switch-when="0">Not configured</span>
+                    <span ng-switch-when="1">
+                        <span ng-class="['text-success','text-warning','text-error'][warnings.lost]">Configured</span>
+                    </span>
+                </span>
+                <span class="text-danger" ng-show="server.receiver.state < 0" ng-switch on="server.receiver.state">
+                    <span ng-switch-when="-30"><span>Channel map collision</span></span>
+                    <span ng-switch-when="-24"><span>SDP channel count mismatch</span></span>
+                    <span ng-switch-when="-23"><span>SDP sync time attribute missing</span></span>
+                    <span ng-switch-when="-22"><span>SDP payload error</span></span>
+                    <span ng-switch-when="-21"><span>SDP clock mismatch</span></span>
+                    <span ng-switch-when="-20"><span>Generic SDP error</span></span>
+                    <span ng-switch-when="-13"><span>A stream with this multicast/port combination already exists</span></span>
+                    <span ng-switch-when="-12"><span>Could not set channel map</span></span>
+                    <span ng-switch-when="-11"><span>Could not create session</span></span>
+                    <span ng-switch-when="-10"><span>Could not create stream</span></span>
+                    <span ng-switch-default><span>Unknown error</span></span>
+                </span>
+            </span>
+        </div>
+        <div class="form-group" ng-controller="rv.controllers.destination.rtcp" ng-show="server.receiver.state == 1">
+            <label class="col-sm-2 control-label">Jitter (samples)</label>
+            <div class="col-sm-offset-2" style="position: relative; padding-left: 15px;">
+                <span class="flot" 
+                    flot-data="jitter" flot-options="graphOptions"                                     
+                    ng-init="graphOptions={yaxis: {labelWidth: 20}, xaxis: {show: false}, grid: {borderWidth: 0.1}}"></span>
+            </div>
+        </div>
+        <div class="form-group" ng-controller="rv.controllers.destination.rtcp" ng-show="server.receiver.state == 1">
+            <label class="col-sm-2 control-label">Lost packets</label>
+            <div class="col-sm-offset-2" style="position: relative; padding-left: 15px;">
+                <span class="flot" 
+                    flot-data="lost" flot-options="graphOptions"                                     
+                    ng-init="graphOptions={yaxis: {labelWidth: 20}, xaxis: {show: false}, grid: {borderWidth: 0.1}}"></span>
+            </div>
+        </div>
+    </form>
+
+    <h2>Stream Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Label</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="(unnamed)" ng-model="local.receiver.label" ng-disabled="disabled" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Source</label>
+            <div class="col-sm-4">
+                <span ng-mouseenter="updateDiscoveredSessions()">
+                    <!--select class="form-control" ng-model="local.uri" ng-options="d|sourceURIs4comboBox for d in discoveredSessions" ng-disabled="disabled"></select>
+                    <input class="form-control" type="text" title="The source URI of the stream source" ng-model="local.uri" ng-disabled="disabled"></input -->
+                    <input class="comboBox" title="The source URI of this session"
+                        ng-model="local.destination.uri" data="discoveredSessions|sourceURIs4comboBox"></input>
+                </span>
+            </div>
+            <div class="col-sm-6">
+                <span style="display: inline-block; vertical-align: top; padding-top: 5px;">
+                    <span>
+                        <i class="icon-ellipsis-horizontal animated infinite flash" 
+                            ng-show="local.destination.uri.length > 0  &&  local.destination.uri != server.destination.uri  &&  local.destination.sdp.length == 0"></i>
+                        <i class="icon-file-alt" style="padding-left: 0px" ng-show="local.destination.sdp.length > 0" ng-class="{'text-warning': local.sdp.indexOf('a=sync-time:') < 0}"></i>
+                    </span>
+                    <span style="position: relative" ng-show="local.destination.sdp.length > 0">&nbsp;
+                        <div class="popover right rav-popover" style="box-shadow: none; -webkit-box-shadow: none;" ng-init="showUnformatted=false" >
+                            <div style="top: 40px;" class="arrow"></div>
+                            <div class="popover-title">Session Description</div>
+                            <div class="popover-content">
+                                <div ng-show="!showUnformatted">
+                                    <div class="row"><label class="col-sm-4">Codec</label><div class="col-sm-8">{{local.parsedSdp.streams[0].codec}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Sample Rate</label><div class="col-sm-8">{{local.parsedSdp.streams[0].sampleRate}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Frame size</label><div class="col-sm-8">{{local.parsedSdp.streams[0].frameCount}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Channels</label><div class="col-sm-8">{{local.parsedSdp.streams[0].channels|channelList}}</div></div>
+                                </div>
+                                <div ng-show="showUnformatted"><pre>{{local.destination.sdp}}</pre></div>
+                            </div>
+                            <div class="popover-content" style="padding-top: 0" ng-init="isAES67 = (streamType=='aes67')" ng-show="detectPreset()">
+                                <div class="alert alert-info" style="margin: 0 0 0 0" ng-class="{'alert-info2': detectPreset()=='aes67'}">
+                                    This is a<span ng-show="detectPreset() == 'aes67'">n</span> {{presetHandler.names[detectPreset()]}}
+                                </div>
+                            </div>
+                            <div class="form-inline pull-right">
+                                <input type="checkbox" ng-checked="showUnformatted" ng-click="showUnformatted=!showUnformatted;"></input><label>Show SDP source</label>
+                            </div>
+                        </div>
+                    </span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Delay</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" title="The play-out delay in frames for this session." 
+                    ng-model="local.receiver.delay" ng-options="c for c in local.delay_OPTIONS" ng-disabled="disabled" required></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Syntonized Mode</label>
+            <div class="col-sm-4">
+                <input type="checkbox" class="checkbox" title="Forces receiving of this session in syntonized mode." ng-model="local.receiver.syntonized" ng-disabled="disabled"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Channel count</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" title="The number of channels in the stream"  
+                    ng-model="channelCount" min="0" ng-disabled="disabled  ||  local.destination.sdp.length > 0" required></input>
+            </div>
+        </div>
+    </form>
+    
+    <h2>Media Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Media</label>
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="media" ng-options="io for io in ioNames" ng-disabled="disabled  ||  (ioNames.length == 1 && ioNames[0] == media)"></select>
+            </div>
+        </div>
+        <div class="form-group" ng-show="expertMode[0]">
+            <label class="col-sm-2 control-label">Consecutive tracks</label>
+            <div class="col-sm-4">
+                <input type="checkbox" class="checkbox" ng-model="isMapLinked" ng-disabled="disabled"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Play tracks</label>
+            <div class="col-sm-4">
+                <div ng-if="isMapLinked">
+                    <select class="form-control" ng-model="map[0]" ng-options="track[0] as track|channelMap:outputs for track in linkedOuts" 
+                        ng-disabled="disabled" style="margin-bottom: 2px"></select>
+                </div>
+                <div style="max-height: 150px; overflow-x: hidden; overflow-y: auto; width: 300px;" ng-if="!isMapLinked">
+                    <div ng-repeat="ch in [] | range:channelCount">
+                        <select class="form-control" ng-model="map[$index]" ng-options="channel.id as channel|channelStatus for channel in outputs" 
+                            ng-disabled="disabled" ng-required style="margin-bottom: 2px">
+                            <option value="">Not assigned</option>
+                        </select>
+                    </div>
+                </div>                                    
+            </div>
+        </div>
+    </form>
+    
+    <div style="margin-top: 20px;">
+        <button class="btn btn-warning" ng-click="save();goBack();" ng-disabled="form.$invalid  ||  isClean()">Save</button>
+        <button class="btn btn-primary" style="margin-left: 10px;" ng-click="goBack()">Cancel</button>
+    </div>
+</form>

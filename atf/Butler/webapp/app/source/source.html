@@ -1,0 +1,170 @@
+<div>
+    <h2>Stream Settings</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Name</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" title="The name of the stream" ng-model="local.source.name" 
+                    ng-disabled="!expertMode[0]"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Address</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                <input class="form-control" type="text" title="The destination IP address of this stream or 'auto'." ng-model="local.sender.address" 
+                        ng-pattern="ipAddressPortTTLPatternWithAuto" ng-disabled="!expertMode[0]" />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                            ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li>
+                                <a class="text-right" href="" ng-click="local.sender.address='auto'">auto</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="col-sm-offset-3 col-sm-9" ng-if="server.sender._addressAllocated  &&  server.sender._addressAllocated != local.sender.address">
+                <p class="form-control-static small" style="padding-top: 0">Currently allocated address: {{local.sender._addressAllocated}}</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Payload</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <button class="form-control" type="text" title="Payload preset" ng-model="currentPreset" style="font-weight: bold; text-align: left;" ng-style="{'color': streamPresets.colors[currentPreset]}"
+                         ng-disabled="!expertMode[0]">{{currentPreset ? streamPresets.names[currentPreset] : 'Custom'}}</button>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                             ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="(presetName, x) in streamPresets.names">
+                                <a href="" style="font-weight: bold" ng-click="setPreset(presetName)" ng-style="{'color': streamPresets.colors[presetName]}"><img height="16px" ng-src="{{streamPresets.icons[presetName]}}" ng-if="streamPresets.icons[presetName]"/> {{streamPresets.names[presetName]}}</a>
+                            </li>
+                            <li>
+                                <a href="" style="font-weight: bold" ng-click="setPreset('')">Custom</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-show="!currentPreset.length">
+            <label class="col-sm-3 control-label">Channel count</label>
+            <div class="col-sm-9">
+                <input type="number" class="form-control" title="The number of channels in this stream" 
+                    ng-model="channelCount" min="1" ng-disabled="!expertMode[0]"></input>
+            </div>
+        </div>
+        <div class="form-group" ng-show="!currentPreset.length">
+            <label class="col-sm-3 control-label">Codec</label>
+            <div class="col-sm-9">
+                <select class="form-control" title="The audio codec used for this stream" 
+                    ng-model="local.sender.codec" ng-options="c for c in codecs" required  ng-disabled="!expertMode[0]"></select>
+            </div>
+        </div>
+        <div class="form-group" ng-show="!currentPreset.length">
+            <label class="col-sm-3 control-label">Frame size</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input class="form-control" type="number" title="The number of samples per channel per network packet" 
+                        ng-model="local.sender.codecParameters.frameSize" ng-disabled="!expertMode[0]"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                            ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="c in local.sender.codecParameters.frameSize_OPTIONS">
+                                <a class="text-right" href="" ng-click="local.sender.codecParameters.frameSize=c">{{c}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DSCP</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input type="number" class="form-control" title="The QoS value used for this stream" required min="0" max="63"
+                        ng-model="local.sender.dscp" ng-disabled="!expertMode[0]"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                             ng-disabled="!expertMode[0]"><i class="fa fa-caret-down"></i></button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="c in dscps">
+                                <a href="" ng-click="local.sender.dscp=c.value">{{c.label}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-if="!currentPreset.length">
+            <label class="col-sm-3 control-label">Payload ID</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="number" title="The payload type used in the SDP" min="96" max="127" required
+                    ng-model="local.sender.payload" ng-disabled="!expertMode[0]"/>
+            </div>
+        </div>
+    </form>
+    
+    <h2>Media Settings</h2>
+    <form class="form form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Media</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="media" ng-options="io for io in medias"
+                    required ng-disabled="!expertMode[0]  ||  (medias.length == 1 && medias[0] == media)"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Consecutive tracks</label>
+            <div class="col-sm-9">
+                <input type="checkbox" class="checkbox" ng-model="isMapLinked" ng-disabled="!expertMode[0]"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Recording tracks</label>
+            <div class="col-sm-9">
+                <div ng-if="isMapLinked">
+                    <select class="form-control" ng-model="map[0]" ng-options="track[0] as linkedInsLabels[track[0]] for track in linkedIns" 
+                        required style="margin-bottom: 2px" ng-disabled="!expertMode[0]"></select>
+                    <!--select class="form-control" ng-model="map[0]" ng-options="track[0] as track|channelMap:inputs for track in linkedIns" 
+                        required style="margin-bottom: 2px"></select -->
+                </div>
+                <div style="max-height: 150px; overflow-x: hidden; overflow-y: auto;" ng-if="!isMapLinked">
+                    <div ng-repeat="ch in []|range:channelCount">
+                        <select class="form-control" ng-model="map[$index]" ng-options="track as inputs[track] for track in inputIndices" 
+                            ng-required style="margin-bottom: 2px"  ng-disabled="!expertMode[0]">
+                        </select>
+                    </div>
+                </div>                                    
+                <!-- div ng-show="!isMapLinked">
+                    <input class="rvChannelMap" data="ins" ng-model="local.streams['0'].maps"></input>
+                </div -->                                
+            </div>
+        </div>                                
+    </form>
+    
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info" ng-show="packetSize() > 0  &&  packetSize() <= 1440">
+                Your configuration results in {{packetSize()}} data bytes/packet.
+            </div>
+            <div class="alert alert-warning" ng-show="packetSize() > 1440">
+                Your configuration results in {{packetSize()}} data bytes/packet which may exceed the Ethernet MTU (depending on your network setup).
+            </div>
+        </div>
+     </div>
+    
+    <h2>Link</h2>
+    <form class="form form-horizontal" role="form">
+        <div class="form-group" ng-init="rtsp_uri = 'rtsp://' + location.host() + ':' + location.port() + '/by-id/'">
+            <label class="col-sm-3 control-label">RTSP URI</label>
+            <div class="col-sm-9 form-control-static"><a href="{{rtsp_uri}}{{server.source.id}}">{{rtsp_uri}}{{server.source.id}}</a></div>
+        </div>
+    </form>    
+</div>

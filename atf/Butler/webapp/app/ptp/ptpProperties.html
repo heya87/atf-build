@@ -1,0 +1,76 @@
+<div class="modal-header">
+    <h1 class="modal-title">PTP Properties</h1>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Domain</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="number" ng-model="local.domain" min="0" max="9" ng-disabled="disabled()" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Prio1</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="number" ng-model="local.prio1" min="0" max="255" ng-disabled="disabled()" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Prio2</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="number" ng-model="local.prio2" min="0" max="255" ng-disabled="disabled()" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Announce interval</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="local.announce" ng-options="c.value as c.label for c in announces" ng-disabled="disabled()" required></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Sync interval</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="local.sync" ng-options="c.value as c.label for c in syncs" ng-disabled="disabled()" required></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Slave only</label>
+            <div class="col-sm-9">
+                <input type="checkbox" ng-model="local.slaveOnly" ng-disabled="disabled()"></input>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Delay mechanism</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="local.delayMechanism" ng-options="c.value as c.label for c in delayMechanisms" ng-disabled="disabled()" required></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">DSCP</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <input class="form-control" type="number" min="0" max="63" ng-model="local.dscp" ng-disabled="disabled()"></input>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"
+                            ng-disabled="disabled ||  !expertMode[0]">
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li ng-repeat="c in dscps">
+                                <a href="" ng-click="local.dscp=c.value;">{{c.label}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning voffset3" style="margin-bottom: 0;" ng-if="!isClean()">
+            Changes will not take effect until after the device is rebooted.
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-if="expertMode[0]" ng-click="$close(local)" ng-disabled="isClean()">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>
+    

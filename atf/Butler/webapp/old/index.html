@@ -1,0 +1,106 @@
+<!doctype html>
+<html ng-app="rv">
+    <head>
+        <title ng-controller="rv.controllers.identity" ng-bind-template="{{server.name}}"></title>
+        
+        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="css/bootstrap.min.css">        
+        <link rel="stylesheet" href="css/animate.css">        
+        <link rel="stylesheet" href="css/font-awesome.min.css">        
+        <link rel="stylesheet" href="lib/select2/select2.css">        
+        <link rel="stylesheet" href="lib/notify/ui.notify.css">        
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body class="ng-cloak" style="min-width: 960px;" ng-controller="rv.controllers.global" >
+    
+        <!--  modal stuff -->            
+        <div class="modal-backdrop" style="opacity: 0.70;" ng-hide="cometd.connected"></div>
+        <div class="modal-backdrop" style="background-color: transparent" ng-hide="cometd.connected">
+            <div style="font-weight: bold; text-align: center; margin: 25px 20px 0 20px; font-size: 25px; color: #c44;">
+                <i class="icon-thumbs-down"></i>&nbsp;No connection to device - reconnecting ...
+            </div>
+        </div>
+
+        <div class="jumbotron"  style="background-color: white;">
+            <div class="container-fluid">
+                <img src="./img/ravenna.png" alt="Loading..." style="float: left; height: 90px; width: 363px; margin-right: 60px;"></img>
+                <div class="pull-right" ng-include src="'inc/identity.html'"></div>
+            </div>
+        </div>
+
+        <div class="navbar navbar-inverse rv-navbar" style="margin: 0px 15px 0 15px; min-height: 0;">
+	    <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#/overview"><i class="icon-home"></i></a>
+                    </li>
+                </ul>
+                    
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" role="button" data-toggle="dropdown" ng-click="updateDiscoveredHTTPServices()"><i class="icon-globe"></i><i class="icon-caret-down"></i></a>
+                        <ul class="dropdown-menu pull-right">
+                            <li ng-repeat="service in discoveredServices"><a href="#" ng-click="switchTo(service)" onClick="return false">{{service|dnssdTrim}}</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" role="button" data-toggle="dropdown"><i class="icon-cogs"></i><span class="icon-caret-down"></span></a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="#/network">Network</a></li>
+                            <li><a href="#/medias">Medias</a></li>
+                            <li ng-show="_capabilities.routing"><a href="#/routing">Routing Matrix</a></li>
+                            <li><a href="#/advanced">Advanced</a></li>
+                            <li ng-show="_capabilities.firmwareUpdate"><a href="#/update">Firmware update</a></li>
+                            <li class="alert-danger" ng-show="_capabilities.firmwareUpdate"><a ng-click="reboot()"><i class="icon-exclamation-sign"></i> Reboot device</a></li>
+                            <li><a href="#/about">About</a></li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+        <div class="ng-view container-fluid" id="main"></div>
+        
+        <!-- notification stuff-->
+        <div class="notify"></div>
+
+        <script type="text/javascript" src="lib/jquery/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery-ui-1.9.0.custom.min.js"></script>
+
+        <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+        
+        <script type="text/javascript" src="lib/org/cometd.js"></script>
+        <script type="text/javascript" src="lib/json2.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery.cometd.js"></script>
+        <script type="text/javascript" src="lib/jquery/jquery.flot.min.js"></script>
+
+        <script type="text/javascript" src="lib/notify/jquery.notify.min.js"></script>
+
+        <script type="text/javascript" src="lib/angular/angular.min.js"></script>
+        <script type="text/javascript" src="lib/angular/angular-route.min.js"></script>
+        <script type="text/javascript" src="lib/angular/angular-ui.min.js"></script>
+        <script type="text/javascript" src="lib/angular/ng-infinite-scroll.min.js"></script -->
+
+        <script type="text/javascript" src="lib/select2/select2.min.js"></script>
+
+        <script type="text/javascript" src="js/rv.js"></script>
+        <script type="text/javascript" src="js/cometd-service.js"></script>
+        <script type="text/javascript" src="js/services.js"></script>
+        <script type="text/javascript" src="js/directives.js"></script>
+        <script type="text/javascript" src="js/filters.js"></script>
+        <script type="text/javascript" src="js/controllers/global.js"></script>
+        <script type="text/javascript" src="js/controllers/identity.js"></script>
+        <script type="text/javascript" src="js/controllers/ios.js"></script>
+        <script type="text/javascript" src="js/controllers/network.js"></script>
+        <script type="text/javascript" src="js/controllers/misc.js"></script>
+        <script type="text/javascript" src="js/controllers/overview.js"></script>
+        <script type="text/javascript" src="js/controllers/destination.js"></script>
+        <script type="text/javascript" src="js/controllers/source.js"></script>
+        <script type="text/javascript" src="js/controllers/logging.js"></script>
+        <script type="text/javascript" src="js/controllers/update.js"></script>
+        <script type="text/javascript" src="js/controllers/routing.js"></script>
+    </body>
+</html>

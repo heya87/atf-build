@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h1 class="modal-title">Network Settings</h1>
+</div>
+<div class="modal-body">
+    <form class="form form-horizontal" name="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Hostname</label>
+            <div class="col-sm-9">
+                <input class="form-control" id="hostname" name="hostname" type="text" ng-model="local.hostname" ng-pattern="hostnamePattern" ng-disabled="disabled()" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Gateway</label>
+            <div class="col-sm-9">
+                <input class="form-control" id="gateway" name="gateway" type="text" ng-model="local.gateway" ng-pattern="ipAddressPattern" ng-disabled="disabled()" required />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="$close()" ng-disabled="!form.$valid  ||  isClean()">Apply</button>
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>

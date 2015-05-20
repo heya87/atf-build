@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h1 class="modal-title">Firmware Update</h1>
+</div>
+<div class="modal-body">
+    <div ng-controller="rv.controllers.update">
+        <iframe name="hiddenFrame" style="display: none"></iframe>
+        
+        <form action="/uploadFirmware" method="post" enctype="multipart/form-data" target="hiddenFrame" ng-show="updateStatus==undefined||updateStatus==3">
+            Select the image you want to flash the device with:
+            <input class="input-small" name="Datei" type="file" size="50" maxlength="10000000" accept="*/*"></input>
+            <div class="voffset3">
+                <button class="btn btn-warning btn-small" type="submit" value="Start update">Start Update</button>
+            </div>
+        </form>
+
+        <div>
+            <div ng-show="updateStatus<=1">
+                <div class="alert alert-info">Updating firmware ...<br/><br/>
+                    Once the firmware update has completed successfully, the board will automatically reboot and you will be 
+                    reconnected.
+                </div>
+            </div>
+            <div ng-show="updateStatus==2">
+                <div class="alert alert-success"><i class="icon-ok" /> The firmware was successfully updated - rebooting ...</div>
+            </div>
+            <div ng-show="updateStatus==3">
+                <div class="alert alert-error"><i class="icon-exclamation-sign" /> Firmware update failed!</div>
+            </div>
+            
+            <div class="voffset3" ng-show="updateMessage.length">
+                <div class="zippy" zippy-title="Show details"><pre style="max-height: 300px;" >{{updateMessage}}</pre></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+</div>

@@ -1,0 +1,20 @@
+<h1><i class="fa fa-exchange"></i> Network</h1>
+<div ng-controller="rv.controllers.networkSettings">
+    <div ng-controller="rv.controllers.networkInterface" ng-repeat="ifName in interfaces">
+        <div ng-if="server.address.indexOf('127.')!=0">
+            <div class="row">
+                <div class="col-sm-3 text-nowrap">
+                    <a href="" title="{{ifName}}" ng-click="openNicProperties(); $event.stopPropagation();">
+                        <h2 class="novoffset" style="overflow: hidden; text-overflow: ellipsis;">{{ifName}}</h2>
+                    </a>
+                </div>
+                <div class="col-sm-9">
+                    <div title="Address"><span class="hidden-sm"><label>Address</label> </span>{{server.address}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="expertMode[0]">
+        <div class="col-sm-12"><a href="" title="Other network settings" ng-click="openProperties(); $event.stopPropagation();">Other network settings ...</a></div>
+    </div>
+</div>

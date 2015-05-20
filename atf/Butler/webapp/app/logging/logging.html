@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h1 class="modal-title">Logging</h1>
+</div>
+<div class="modal-body" ng-controller="rv.controllers.logging">
+    <h2>Settings</h2>
+    <div ng-controller="rv.controllers.logProcesses">
+        <div ng-repeat="process in processes">
+            <h3>{{process}}</h3>
+            <div>
+                <div class="container-fluid" style="max-height: 200px; overflow-y: scroll;" ng-controller="rv.controllers.logging">
+                    <div class="row voffset1" ng-repeat="category in local.categories" ng-controller="rv.controllers.logCategory">
+                        <div class="col-md-7">
+                            <label>{{category}}</label>
+                        </div>
+                        <div class="col-md-5">
+                            <select class="form-control" style="margin-bottom: 0px" ng-model="value" ng-options="l.value as l.label for l in logLevels" ng-disabled="value == -1"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div class="voffset3">&nbsp;</div>
+    <h2>Files</h2>
+    <ul class="list-unstyled" ng-repeat="logfile in _capabilities.logfiles">
+        <a href="{{logfile}}" target="_blank">{{logfile}}</a>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="$close()">Apply</button>
+</div>

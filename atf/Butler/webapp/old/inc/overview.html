@@ -1,0 +1,176 @@
+<!-- clock stuff -->
+<div class="clearfix" >
+    <h1>PTP</h1>
+    <table class="table table-hover table-condensed">
+        <tr style="cursor: pointer;" ng-click="go('/clock')" ng-controller="rv.controllers.clock">
+            <td style="text-align: center; width: 30px;">
+                <div ng-switch="server.state">
+                    <div class="text-info" ng-switch-when="1" title="Init"><i class="icon-ellipsis-horizontal animated infinite flash"></i></div>
+                    <div class="text-danger" ng-switch-when="2" title="Faulty"><i class="icon-exclamation-sign"></i></div>
+                    <div class="text-danger" ng-switch-when="3" title="Disabled"><i class="icon-off"></i></div>
+                    <div class="text-info" ng-switch-when="4" title="Listening"><i class="icon-exclamation-sign"></i></div>
+                    <div class="text-info" ng-switch-when="5" title="Pre-Master"><i class="icon-exclamation-sign"></i></div>
+                    <div class="text-success" ng-switch-when="6" title="Master"><i class="icon-ok"></i></div>
+                    <div class="text-danger" ng-switch-when="7" title="Passive"><i class="icon-exclamation-sign"></i></div>
+                    <div class="text-danger" ng-switch-when="8" title="Uncalibrated"><i class="icon-exclamation-sign"></i></div>
+                    <div class="text-success" ng-switch-when="9" title="Slave"><i class="icon-ok"></i></div>
+                    <div class="" ng-switch-default title="Unknown"><i class="icon-question-sign"></i></div>
+                </div>
+            </td>
+            <td>
+                <div class="inline-form">
+                    <div>
+                        <label>Domain</label>
+                        <span>{{server.domain}}</span>
+                    </div>
+                    <div ng-if="server.state == 9"><!--  only show when slave -->
+                        <label>Master</label>
+                        <span>{{server.masterIp}}</span>
+                    </div>
+                    <div ng-if="server.state == 9"><!--  only show when slave -->
+                        <label>Offset from master</label>
+                        <span ng-if="server.state == 9">{{server.offsetFromMaster}} µs</span>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- sources overview -->
+<div class="clearfix" ng-controller="rv.controllers.sources">
+    <div class="pull-right">
+        <a style="font-size: 10px; padding: 0px 3px; cursor: pointer;" ng-click="addSource()">Create source</a>
+    </div>
+    <h1>Sources</h1>
+    <table class="table table-hover table-condensed" infinite-scroll="addItems()" infinite-scroll-distance="2">
+        <tr style="cursor:pointer;" ng-repeat="id in sources|limitTo:scrollLimit" ng-controller="rv.controllers.ovsource" ng-click="go('/source/' + id)">
+            <td style="text-align: center; width: 30px;" ng-switch="server.sender.state">
+                <div title="Not configured" ng-switch-when="0"></div>
+                <div ng-switch-when="1">
+                    <div title="Configured" ng-class="['text-success','text-warning','text-danger'][warnings.lost]"><i class="icon-exchange"></i></div>
+                </div>
+                <div class="text-danger" ng-switch-default><i class="icon-exclamation-sign"></i></div>
+            </td>
+            <td style="width: 250px; min-width: 250px;" title="Source Name" >
+                <span ng-if="server.source.name">{{server.source.name}}</span>
+                <span style="color: #aaa;" ng-if="!server.source.name">(unnamed)</span>
+            </td>
+            <td>
+                <div class="inline-form">
+                    <div><label>Address</label><div>{{server.sender.address}} <span ng-if="server.sender.address=='auto'">({{server.sender.address_allocated}})</span></div></div>
+                    <div><label>Codec</label><span>{{server.sender.codec}}</span></div>
+                    <div style="position: relative" ng-mouseenter="showMapping=true" ng-mouseleave="showMapping=false">
+                        <label>Channels</label><span>{{map.length}}</span>
+                        <div ng-if="showMapping" style="absolute: relative;" ng-init="updateFormattedMap()">
+                            <div class="popover top rav-popover" style="display: block; min-width: 300px;" onclick="return false" ng-click="$event.stopPropagation()">
+                                <div style="left: 103px;" class="arrow"></div>
+                                <div class="popover-title">Routing</div>
+                                <div class="popover-content form-inline">
+                                    <div class="row"><label class="col-sm-4">Media</label><span>{{media}}</span></div>
+                                    <div class="row"><label class="col-sm-4">Tracks</label><span>{{formattedMap}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style=" text-align: center; width: 32px;">
+                <button class="btn btn-xs" title="Delete source" ng-click="remove(); $event.stopPropagation();"><i class="icon-trash text-warning"></i></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- destinations overview -->
+<div class="clearfix" ng-controller="rv.controllers.destinations">
+    <div class="pull-right">
+        <a style="font-size: 10px; padding: 0px 3px; cursor: pointer;" ng-click="addDestination()">Create destination</a>
+    </div>
+    <h1>Destinations</h1>                            
+    <table class="table table-hover table-condensed" infinite-scroll="scrollLimit=scrollLimit+10" infinite-scroll-distance="2" ng-init="scrollLimit=20">
+        <tr style="cursor:pointer;" ng-repeat="id in destinations|limitTo:scrollLimit" ng-controller="rv.controllers.ovdestination" ng-click="go('/destination/' + id)">
+            <td style="text-align: center; width: 30px; min-width: 30px;" ng-switch="server.receiver.state">
+                <div class="text-danger" title="Channel map collision" ng-switch-when="-30"><i class="icon-exclamation-sign"></i></div>
+                <div class="text-danger" title="SDP sync time attribute missing" ng-switch-when="-23"><i class="icon-exclamation-sign"></i></div>
+                <div class="text-danger" title="SDP payload error" ng-switch-when="-22"><i class="icon-exclamation-sign"></i></div>
+                <div class="text-danger" title="SDP clock mismatch" ng-switch-when="-21"><i class="icon-exclamation-sign"></i></div>
+                <div class="text-danger" title="SDP channel count mismatch" ng-switch-when="-20"><i class="icon-exclamation-sign"></i></div>
+                <div class="text-danger" title="A stream with this multicast/port combination already exists" ng-switch-when="-13"><i class="icon-exclamation-sign"></i></div>
+                <div class="" title="Not configured" ng-switch-when="0"></div>
+                <div ng-switch-when="1">
+                    <div title="Configured" ng-class="['text-success','text-warning','text-danger'][warnings.lost]"><i class="icon-exchange"></i></div>
+                </div>
+                <div class="text-danger" ng-switch-default><i class="icon-exclamation-sign"></i></div>
+            </td>
+            <td style="width: 250px; min-width: 250px;" title="Destination Name">
+                <span ng-if="server.receiver.label">{{server.receiver.label}}</span>
+                <span style="color: #aaa;" ng-if="!server.receiver.label">(unnamed)</span>
+            </td>
+            <td style="width: 20px; min-width: 20px; max-width:20px" ng-controller="rv.controllers.ovdestinationsd">
+                <div class="dropdownx dropdown" style="display: inline-block; padding: 0px; margin: 0px;" ng-if="expertMode[0]" title="Quick connect">
+                    <button class="btn btn-xs dropdown-toggle" style="margin-right: 5px" ng-click="updateDiscoveredSessions()"><i class="icon-caret-down"></i></button>
+                    <ul class="dropdown-menu" style="right: auto; max-height: 150px; overflow: auto;" ng-if="discoveredSessions.length > 0">
+                        <li ng-repeat="session in discoveredSessions"><a ng-click="local.uri = session; dropdownClose(); $event.stopPropagation(); saveSource();">{{session|sourceURI}}</a></li>
+                    </ul>
+                </div>
+            </td>
+            <td style="width: 270px; min-width: 270px; max-width: 270px;" title="Source URI" ng-switch="server.destination.uri.length">
+                <div ng-switch-default style="overflow: hidden;">{{server.destination.uri|sourceURI}}</div>
+                <div style="color:#aaa" ng-switch-when="0">(no source)</div>
+            </td>
+            <td style="width: 20px; min-width: 20px; max-width: 20px;">
+                <div ng-mouseenter="showSdp=(server.destination.sdp.length>0)" ng-mouseleave="showSdp=false">
+                    <span>
+                        <i class="icon-ellipsis-horizontal animated infinite flash" ng-if="server.destination.uri.length > 0  &&  server.destination.sdp.length == 0"></i>
+                        <i class="icon-file-alt" ng-if="server.destination.sdp.length > 0"
+                            ng-class="{'text-warning': server.destination.sdp.indexOf('a=sync-time:') < 0}"></i>
+                    </span>
+                    <div style="position: relative; padding-bottom: 3px;" ng-init="showUnformatted=false" ng-if="showSdp"> 
+                        <div class="popover top rav-popover" onclick="return false" ng-click="$event.stopPropagation()">
+                            <div style="left: 103px;" class="arrow"></div>
+                            <div class="popover-title">Session Description</div>
+                            <div class="popover-content">
+                                <div ng-if="!showUnformatted">
+                                    <div class="row"><label class="col-sm-4">Codec</label><div>{{server.parsedSdp.streams[0].codec}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Sample Rate</label><div>{{server.parsedSdp.streams[0].sampleRate}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Frame size</label><div>{{server.parsedSdp.streams[0].frameCount}}</div></div>
+                                    <div class="row"><label class="col-sm-4">Channels</label><div>{{server.parsedSdp.streams[0].channels|channelList}}</div></div>
+                                </div>
+                                <div ng-if="showUnformatted" style="max-width: 550px; overflow: hidden;"><pre>{{server.destination.sdp}}</pre></div>
+                            <div class="popover-content" style="padding-top: 0" ng-init="isAES67 = (streamType=='aes67')" ng-if="detectPreset()">
+                                <div class="alert alert-info" style="margin: 0 0 0 0" ng-class="{'alert-info2': detectPreset()=='aes67'}">
+                                    This is a<span ng-if="detectPreset() == 'aes67'">n</span> {{presetHandler.names[detectPreset()]}}
+                                </div>
+                            </div>
+                            <div class="form-inline pull-right">
+                                <input type="checkbox" ng-checked="showUnformatted" ng-click="showUnformatted=!showUnformatted; $event.stopPropagation();"></input><label>Show SDP source</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div style="width: 1px;">
+                    <div class="inline-form">
+                        <div><label>Delay</label><span>{{server.receiver.delay}} samples</span></div>
+                        <div style="position: relative" ng-mouseenter="showMapping=true" ng-mouseleave="showMapping=false">
+                            <label>Channels</label><span>{{server.parsedSdp ? server.parsedSdp.streams[0].channels.length : 0}}</span>
+                            <div ng-if="showMapping" ng-init="updateFormattedMap()">
+                                <div class="popover top  rav-popover" onclick="return false" ng-click="$event.stopPropagation()">
+                                <div style="left: 103px;" class="arrow"></div>
+                                <div class="popover-title">Routing</div>
+                                <div class="popover-content form-inline">
+                                <div class="row"><label class="col-sm-4">Media</label><div>{{media}}</div></div>
+                                <div class="row"><label class="col-sm-4">Tracks</label><div>{{formattedMap}}</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style="text-align: center; width: 32px;">
+                <button class="btn btn-xs" title="Delete sink" ng-click="remove(); $event.stopPropagation();"><i class="icon-trash text-warning"></i></button>
+            </td>
+        </tr>
+    </table>
+</div>

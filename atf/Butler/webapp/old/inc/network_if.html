@@ -1,0 +1,32 @@
+<div>
+    <h1>{{ifName}}</h1>
+    <div>
+        <form class="form form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Configuration</label>
+                <div class="col-sm-4">
+                    <select class="form-control" ng-model="local.config" ng-options="c.id as c.label for c in configs" ng-disabled="disabled  || !expertMode[0]" required></select>
+                </div>
+            </div>
+            <div class="form-group" ng-if="local.config == 0">
+                <label class="col-sm-2 control-label">Address</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" ng-model="local.address" ng-pattern="ipAddressAndPortPattern" ng-disabled="disabled || !expertMode[0]" required />
+                </div>
+            </div>
+            <div class="form-group" ng-if="local.config == 0">
+                <label class="col-sm-2 control-label">Network Mask</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" ng-model="local.netmask" ng-pattern="ipAddressPattern" ng-disabled="disabled || !expertMode[0]" required />
+                </div>
+            </div>
+        </form>
+        <div ng-show="!isClean()" class="alert alert-warning">
+            Note: you may have to re-start the device to make the changes happen.
+        </div>
+    </div>
+    <div style="margin-top: 10px;">
+        <button class="btn btn-warning" style="margin-right: 10px;" ng-click="save(); goBack();" ng-disabled="form.$invalid  ||  isClean()">Save</button>
+        <button class="btn btn-primary" ng-click="goBack();">Cancel</button>
+    </div>
+</div>
