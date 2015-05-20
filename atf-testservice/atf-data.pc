@@ -1,0 +1,6 @@
+Name: atf-data
+Description: atf-data
+Version: 0.1
+
+Requires: 
+Libs: -r:./atf-data.dll

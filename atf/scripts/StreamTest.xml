@@ -125,7 +125,7 @@
     <device>A_Bottom</device>
     <dependency>createDestination</dependency>
 
-    <node>device/medias/RAVENNA Audio-ra0/outputs/_0</node>
+    <node>device/media/RAVENNA Audio-ra0/outputs/_0</node>
 
     <action>
       <type> setAttribute </type>
@@ -135,7 +135,7 @@
 
 
     <result>
-      <node>device/medias/RAVENNA Audio-ra0/outputs/_0</node>
+      <node>device/media/RAVENNA Audio-ra0/outputs/_0</node>
       <assert>
         <type>Equals</type>
         <actual>
