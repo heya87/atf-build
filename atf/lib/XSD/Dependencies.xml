@@ -1,0 +1,56 @@
+﻿<XmlTestCampaign name="Dependencies">
+    <device>
+        <name>A_Top</name>
+        <ip>192.168.143.132</ip>
+        <port>9009</port>
+    </device>
+        
+    <variable>nodeName</variable>
+
+    <testcase name="checkNodeName">
+        <device>A_Top</device>
+
+        <node>device/streaming/sessions</node>
+
+        <action>
+            <type> getnodename </type>
+            <name> sources </name>
+            <assignTo> $nodeName</assignTo>
+        </action>
+
+        <result>
+        	<node>device</node>
+            <assert>
+                <type>NotEquals</type>
+                <actual>
+                	<value>$nodeName</value>
+            	</actual>
+                <expected>sources</expected>
+            </assert>
+        </result>
+    </testcase>
+
+    <testcase name="checkDependentNodeName">
+        <device>A_Top</device>
+        <dependency>checkNodeName</dependency>
+
+        <node>device/streaming/sessions</node>
+
+        <action>
+            <type> getnodename </type>
+            <name> sources </name>
+            <assignTo> $nodeName</assignTo>
+        </action>
+
+        <result>
+        	<node>device</node>
+            <assert>
+                <type>Equals</type>
+                <actual>
+                	<value>$nodeName</value>
+            	</actual>
+                <expected>sources</expected>
+            </assert>
+        </result>
+    </testcase>
+</XmlTestCampaign>

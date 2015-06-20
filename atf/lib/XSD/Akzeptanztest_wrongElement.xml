@@ -1,0 +1,32 @@
+﻿<XmlTestCampaign name="Akzeptanstest">
+    <device>
+        <name>A_Top</name>
+        <ip>192.168.143.132</ip>
+        <port>9009</port>
+    </device>
+        
+    <variable>nodeName</variable>
+
+    <testcase name="checkNode">
+        <device>A_Top</device>
+
+        <nod>device/streaming/sessions</nod>
+
+        <action>
+            <type> getnodename </type>
+            <name> sources </name>
+            <assignTo> $nodeName</assignTo>
+        </action>
+
+        <result>
+        	<node>device</node>
+            <assert>
+                <type>Equals</type>
+                <actual>
+                	<value>$nodeName</value>
+            	</actual>
+                <expected>sources</expected>
+            </assert>
+        </result>
+    </testcase>
+</XmlTestCampaign>
