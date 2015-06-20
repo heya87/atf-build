@@ -1,6 +1,0 @@
-Name: atf-unittest
-Description: atf-unittest
-Version: 0.1
-
-Requires: 
-Libs: -r:./atf-unittest.dll
